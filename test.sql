@@ -1,4 +1,4 @@
--- SELECT interview.id, interview.student, interview.interviewer_id, interview.appointment_id FROM interview
+SELECT * FROM available_interviewer;
 --       LEFT JOIN interviewer ON  interview.interviewer_id = interviewer.id
 --       LEFT JOIN appointment ON  interview.appointment_id = appointment.id
 --       LEFT JOIN day ON  appointment.day_id = day.id
@@ -24,4 +24,4 @@
 -- WHERE appointment.day_id = 1
 -- ORDER BY appointment.id;
 
-DELETE FROM available_interviewer;
+-- DELETE FROM available_interviewer;
