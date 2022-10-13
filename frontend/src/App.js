@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './App.scss';
-
 import DayList from './components/DayList';
 import Appointment from './components/Appointment';
 // import daysData from './components/__mocks__/days.json';
@@ -28,6 +27,15 @@ export default function Application() {
 
     getDays();
   }, []);
+
+  useEffect(() => {
+    axios.get(`/interviews/day/${day}`).then((response) => {
+      setAppointments(response.data);
+    });
+    axios.get(`/available/interviewers/day/${day}`).then((response) => {
+      console.log('check interviewer data', response.data);
+    });
+  }, [day]);
 
   console.log(days);
 
