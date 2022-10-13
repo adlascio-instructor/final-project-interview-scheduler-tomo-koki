@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 8000;
-const dayRoute = require('./routes/daysRoute');
+const dayRoute = require('./routes/dayRoute');
 
 app.use(express.json());
 

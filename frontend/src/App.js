@@ -1,16 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import './App.scss';
 
-import "./App.scss";
+import DayList from './components/DayList';
+import Appointment from './components/Appointment';
+// import daysData from './components/__mocks__/days.json';
+import appointmentsData from './components/__mocks__/appointments.json';
 
-import DayList from "./components/DayList";
-import Appointment from "./components/Appointment";
-import daysData from "./components/__mocks__/days.json";
-import appointmentsData from "./components/__mocks__/appointments.json";
+import axios from 'axios';
 
 export default function Application() {
-  const [day, setDay] = useState("Monday");
-  const [days, setDays] = useState(daysData);
+  const [day, setDay] = useState('Monday');
+  // const [days, setDays] = useState(daysData);
+  const [days, setDays] = useState({});
   const [appointments, setAppointments] = useState(appointmentsData);
+
+  useEffect(() => {
+    const getDays = async () => {
+      await axios
+        .get(`/day`)
+        .then((res) => {
+          setDays(res.data);
+        })
+        .catch((err) => {
+          console.error('ERROR', err);
+        });
+    };
+
+    getDays();
+  }, []);
+
+  console.log(days);
+
   function bookInterview(id, interview) {
     console.log(id, interview);
     const isEdit = appointments[id].interview;
@@ -64,19 +84,19 @@ export default function Application() {
     });
   }
   return (
-    <main className="layout">
-      <section className="sidebar">
+    <main className='layout'>
+      <section className='sidebar'>
         <img
-          className="sidebar--centered"
-          src="images/logo.png"
-          alt="Interview Scheduler"
+          className='sidebar--centered'
+          src='images/logo.png'
+          alt='Interview Scheduler'
         />
-        <hr className="sidebar__separator sidebar--centered" />
-        <nav className="sidebar__menu">
+        <hr className='sidebar__separator sidebar--centered' />
+        <nav className='sidebar__menu'>
           <DayList days={days} value={day} onChange={setDay} />
         </nav>
       </section>
-      <section className="schedule">
+      <section className='schedule'>
         {Object.values(appointments).map((appointment) => (
           <Appointment
             key={appointment.id}
@@ -87,7 +107,7 @@ export default function Application() {
             cancelInterview={cancelInterview}
           />
         ))}
-        <Appointment key="last" time="5pm" />
+        <Appointment key='last' time='5pm' />
       </section>
     </main>
   );
