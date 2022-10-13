@@ -18,8 +18,10 @@
 --         "name": "Sylvia Palmer",
 --         "avatar": "https://i.imgur.com/LpaY82x.png"
 
-SELECT appointment.id, appointment.time, interview.student, interviewer.id, interviewer.name, interviewer.avatar  FROM appointment
-LEFT JOIN interview ON appointment.id = interview.appointment_id
-LEFT JOIN interviewer ON interviewer.id = interview.interviewer_id
-WHERE appointment.day_id = 1
-ORDER BY appointment.id;
+-- SELECT appointment.id, appointment.time, interview.student, interviewer.id, interviewer.name, interviewer.avatar  FROM appointment
+-- LEFT JOIN interview ON appointment.id = interview.appointment_id
+-- LEFT JOIN interviewer ON interviewer.id = interview.interviewer_id
+-- WHERE appointment.day_id = 1
+-- ORDER BY appointment.id;
+
+DELETE FROM available_interviewer;

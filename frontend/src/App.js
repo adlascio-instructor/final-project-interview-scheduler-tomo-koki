@@ -9,13 +9,14 @@ export default function Application() {
   const [day, setDay] = useState("Monday");
   const [days, setDays] = useState(daysData);
   const [appointments, setAppointments] = useState("");
+  const [availableInterviewers, setAvailableInterviewers] = useState([]);
 
   useEffect(() => {
     axios.get(`/interviews/day/${day}`).then((response) => {
       setAppointments(response.data);
     });
     axios.get(`/available/interviewers/day/${day}`).then((response) => {
-      console.log("check interviewer data", response.data);
+      setAvailableInterviewers(response.data);
     });
   }, [day]);
 
@@ -93,6 +94,7 @@ export default function Application() {
               bookInterview(appointment.id, interview)
             }
             cancelInterview={cancelInterview}
+            availableInterviewers={availableInterviewers}
           />
         ))}
         <Appointment key="last" time="5pm" />
