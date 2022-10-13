@@ -4,7 +4,6 @@ import DayList from './components/DayList';
 import Appointment from './components/Appointment';
 // import daysData from './components/__mocks__/days.json';
 import appointmentsData from './components/__mocks__/appointments.json';
-
 import axios from 'axios';
 
 export default function Application() {
@@ -12,6 +11,8 @@ export default function Application() {
   // const [days, setDays] = useState(daysData);
   const [days, setDays] = useState({});
   const [appointments, setAppointments] = useState(appointmentsData);
+  // const [appointments, setAppointments] = useState('');
+  const [availableInterviewers, setAvailableInterviewers] = useState([]);
 
   useEffect(() => {
     const getDays = async () => {
@@ -34,6 +35,7 @@ export default function Application() {
     });
     axios.get(`/available/interviewers/day/${day}`).then((response) => {
       console.log('check interviewer data', response.data);
+      setAvailableInterviewers(response.data);
     });
   }, [day]);
 
@@ -113,6 +115,7 @@ export default function Application() {
               bookInterview(appointment.id, interview)
             }
             cancelInterview={cancelInterview}
+            availableInterviewers={availableInterviewers}
           />
         ))}
         <Appointment key='last' time='5pm' />
