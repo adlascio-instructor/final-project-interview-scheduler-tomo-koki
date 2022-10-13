@@ -1,16 +1,24 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import "./App.scss";
-
 import DayList from "./components/DayList";
 import Appointment from "./components/Appointment";
 import daysData from "./components/__mocks__/days.json";
-import appointmentsData from "./components/__mocks__/appointments.json";
+import axios from "axios";
 
 export default function Application() {
   const [day, setDay] = useState("Monday");
   const [days, setDays] = useState(daysData);
-  const [appointments, setAppointments] = useState(appointmentsData);
+  const [appointments, setAppointments] = useState("");
+
+  useEffect(() => {
+    axios.get(`/interviews/day/${day}`).then((response) => {
+      setAppointments(response.data);
+    });
+    axios.get(`/available/interviewers/day/${day}`).then((response) => {
+      console.log("check interviewer data", response.data);
+    });
+  }, [day]);
+
   function bookInterview(id, interview) {
     console.log(id, interview);
     const isEdit = appointments[id].interview;

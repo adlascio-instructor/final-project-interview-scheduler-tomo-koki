@@ -11,6 +11,8 @@ const Appointment = (props) => {
   const [add, setAdd] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const [availableInterviewers, setAvailableInterviewers] = React.useState([]);
+
   function save(name, interviewer) {
     const interview = {
       student: name,
