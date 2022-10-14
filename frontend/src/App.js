@@ -1,21 +1,53 @@
-import React, { useState, useEffect } from "react";
-import "./App.scss";
-import DayList from "./components/DayList";
-import Appointment from "./components/Appointment";
-import daysData from "./components/__mocks__/days.json";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import './App.scss';
+import DayList from './components/DayList';
+import Appointment from './components/Appointment';
+// import daysData from './components/__mocks__/days.json';
+// import appointmentsData from './components/__mocks__/appointments.json';
+import axios from 'axios';
 
 export default function Application() {
-  const [day, setDay] = useState("Monday");
-  const [days, setDays] = useState(daysData);
-  const [appointments, setAppointments] = useState("");
+  const [day, setDay] = useState('Monday');
+  // const [days, setDays] = useState(daysData);
+  const [days, setDays] = useState({});
+  const [appointments, setAppointments] = useState({});
+  // const [appointments, setAppointments] = useState(appointmentsData);
+  // const [appointments, setAppointments] = useState('');
   const [availableInterviewers, setAvailableInterviewers] = useState([]);
+
+  useEffect(() => {
+    const getDays = async () => {
+      await axios
+        .get(`/day`)
+        .then((res) => {
+          setDays(res.data);
+        })
+        .catch((err) => {
+          console.error('ERROR', err);
+        });
+    };
+
+    const getSpots = async () => {
+      await axios
+        .get(`/appointment`)
+        .then((res) => {
+          setAppointments(res.data);
+        })
+        .catch((err) => {
+          console.error('ERROR', err);
+        });
+    };
+
+    getDays();
+    getSpots();
+  }, []);
 
   useEffect(() => {
     axios.get(`/interviews/day/${day}`).then((response) => {
       setAppointments(response.data);
     });
     axios.get(`/available/interviewers/day/${day}`).then((response) => {
+      // console.log('check interviewer data', response.data);
       setAvailableInterviewers(response.data);
     });
   }, [day]);
@@ -73,19 +105,19 @@ export default function Application() {
     });
   }
   return (
-    <main className="layout">
-      <section className="sidebar">
+    <main className='layout'>
+      <section className='sidebar'>
         <img
-          className="sidebar--centered"
-          src="images/logo.png"
-          alt="Interview Scheduler"
+          className='sidebar--centered'
+          src='images/logo.png'
+          alt='Interview Scheduler'
         />
-        <hr className="sidebar__separator sidebar--centered" />
-        <nav className="sidebar__menu">
+        <hr className='sidebar__separator sidebar--centered' />
+        <nav className='sidebar__menu'>
           <DayList days={days} value={day} onChange={setDay} />
         </nav>
       </section>
-      <section className="schedule">
+      <section className='schedule'>
         {Object.values(appointments).map((appointment) => (
           <Appointment
             key={appointment.id}
@@ -97,7 +129,7 @@ export default function Application() {
             availableInterviewers={availableInterviewers}
           />
         ))}
-        <Appointment key="last" time="5pm" />
+        <Appointment key='last' time='5pm' />
       </section>
     </main>
   );
