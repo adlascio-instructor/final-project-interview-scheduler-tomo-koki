@@ -3,14 +3,15 @@ import './App.scss';
 import DayList from './components/DayList';
 import Appointment from './components/Appointment';
 // import daysData from './components/__mocks__/days.json';
-import appointmentsData from './components/__mocks__/appointments.json';
+// import appointmentsData from './components/__mocks__/appointments.json';
 import axios from 'axios';
 
 export default function Application() {
   const [day, setDay] = useState('Monday');
   // const [days, setDays] = useState(daysData);
   const [days, setDays] = useState({});
-  const [appointments, setAppointments] = useState(appointmentsData);
+  const [appointments, setAppointments] = useState({});
+  // const [appointments, setAppointments] = useState(appointmentsData);
   // const [appointments, setAppointments] = useState('');
   const [availableInterviewers, setAvailableInterviewers] = useState([]);
 
@@ -26,7 +27,19 @@ export default function Application() {
         });
     };
 
+    const getSpots = async () => {
+      await axios
+        .get(`/appointment`)
+        .then((res) => {
+          setAppointments(res.data);
+        })
+        .catch((err) => {
+          console.error('ERROR', err);
+        });
+    };
+
     getDays();
+    getSpots();
   }, []);
 
   useEffect(() => {
@@ -34,12 +47,10 @@ export default function Application() {
       setAppointments(response.data);
     });
     axios.get(`/available/interviewers/day/${day}`).then((response) => {
-      console.log('check interviewer data', response.data);
+      // console.log('check interviewer data', response.data);
       setAvailableInterviewers(response.data);
     });
   }, [day]);
-
-  console.log(days);
 
   function bookInterview(id, interview) {
     console.log(id, interview);

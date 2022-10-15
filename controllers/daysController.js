@@ -16,9 +16,12 @@ const getDays = (req, res) => {
     .query(
       `SELECT day.id, day.name, COUNT (time)::INT AS spots
       FROM appointment
+      LEFT JOIN interview
+      ON interview.appointment_id = appointment.id
       LEFT JOIN day
       ON appointment.day_id = day.id
-      GROUP BY  day.id, day.name
+
+      GROUP BY  day.id, day.name,interview.id
       ORDER BY day.id;
       `
     )
