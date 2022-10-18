@@ -47,6 +47,22 @@ const getInterviews = (req, res) => {
     .finally(() => pool.end());
 };
 
+const addInterview = (req, res) => {
+  const pool = new Pool(dbCredentials);
+  // console.log(req.body);
+  const id = req.body.id;
+  const student = req.body.interview.student;
+  const interviewer = req.body.interview.interviewer;
+  // pool
+  //   .query(
+  //     `INSERT INTO interview (id, student, interviewer_id, appointment_id) VALUES (9,${student}, ${interviewer.id}, ${id});`
+  //   )
+  //   .then((result) => result.rows)
+  //   .catch((err) => console.log('err', err))
+  //   .finally(() => pool.end());
+};
+
 module.exports = {
   getInterviews,
+  addInterview,
 };

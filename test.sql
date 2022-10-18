@@ -46,6 +46,7 @@
 
 -- DELETE FROM available_interviewer;
 
--- INSERT INTO interview (id, student, interviewer_id, appointment_id) VALUES (8, 'Arthur', 2, 18);
-
 -- DELETE FROM interview where id = 7;
+
+INSERT INTO interview (id, student, interviewer_id, appointment_id) VALUES
+(11, 'Vini Lindo', 2, 5);

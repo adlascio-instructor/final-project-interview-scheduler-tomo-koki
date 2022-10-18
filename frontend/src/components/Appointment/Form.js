@@ -1,14 +1,14 @@
-import React from "react";
-import InterviewerList from "../InterviewerList";
-import Button from "../Button";
+import React from 'react';
+import InterviewerList from '../InterviewerList';
+import Button from '../Button';
 
 const Form = (props) => {
-  const [name, setName] = React.useState(props.student || "");
+  const [name, setName] = React.useState(props.student || '');
   const [interviewer, setInterviewer] = React.useState(
     props.interviewer || null
   );
   const reset = () => {
-    setName("");
+    setName('');
     setInterviewer(null);
   };
   const handleSubmit = (event) => {
@@ -22,14 +22,14 @@ const Form = (props) => {
   };
 
   return (
-    <main className="appointment__card appointment__card--create">
-      <section className="appointment__card-left">
-        <form autoComplete="off" onSubmit={handleSubmit}>
+    <main className='appointment__card appointment__card--create'>
+      <section className='appointment__card-left'>
+        <form autoComplete='off' onSubmit={handleSubmit}>
           <input
-            className="appointment__create-input text--semi-bold"
-            name="name"
-            type="text"
-            placeholder="Enter Student Name"
+            className='appointment__create-input text--semi-bold'
+            name='name'
+            type='text'
+            placeholder='Enter Student Name'
             value={name}
             onChange={(event) => setName(event.target.value)}
             required={true}
@@ -41,8 +41,8 @@ const Form = (props) => {
           onChange={setInterviewer}
         />
       </section>
-      <section className="appointment__card-right">
-        <section className="appointment__actions">
+      <section className='appointment__card-right'>
+        <section className='appointment__actions'>
           <Button danger onClick={cancel}>
             Cancel
           </Button>

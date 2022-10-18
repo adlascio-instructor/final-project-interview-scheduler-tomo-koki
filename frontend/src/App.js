@@ -5,6 +5,10 @@ import Appointment from './components/Appointment';
 // import daysData from './components/__mocks__/days.json';
 // import appointmentsData from './components/__mocks__/appointments.json';
 import axios from 'axios';
+import io from 'socket.io-client';
+const socket = io.connect('http://localhost:8000', {
+  transports: ['websocket'],
+});
 
 export default function Application() {
   const [day, setDay] = useState('Monday');
@@ -14,6 +18,12 @@ export default function Application() {
   // const [appointments, setAppointments] = useState(appointmentsData);
   // const [appointments, setAppointments] = useState('');
   const [availableInterviewers, setAvailableInterviewers] = useState([]);
+
+  // const send = () => {
+  //   socket.emit('semd message', {
+  //     messages: 'hello',
+  //   });
+  // };
 
   useEffect(() => {
     const getDays = async () => {
@@ -40,7 +50,11 @@ export default function Application() {
 
     getDays();
     getSpots();
-  }, []);
+
+    socket.on('recieved_message', (data) => {
+      console.log(data);
+    });
+  }, [socket]);
 
   useEffect(() => {
     axios.get(`/interviews/day/${day}`).then((response) => {
@@ -53,7 +67,12 @@ export default function Application() {
   }, [day]);
 
   function bookInterview(id, interview) {
-    console.log(id, interview);
+    console.log('here', id, interview);
+    socket.emit('send_message', {
+      id: id,
+      interview: interview,
+    });
+
     const isEdit = appointments[id].interview;
     setAppointments((prev) => {
       const appointment = {
@@ -79,6 +98,22 @@ export default function Application() {
         return days;
       });
     }
+    const test = {
+      id: id,
+      interview: interview,
+    };
+
+    const addAppintment = async (test) => {
+      await axios
+        .post(`/interview`, test)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error('ERROR', err);
+        });
+    };
+    addAppintment(test);
   }
   function cancelInterview(id) {
     setAppointments((prev) => {
