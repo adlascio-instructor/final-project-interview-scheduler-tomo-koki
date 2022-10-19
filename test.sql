@@ -25,9 +25,7 @@ SELECT * FROM available_interviewer;
 -- WHERE appointment.day_id = 1
 -- ORDER BY appointment.id;
 
-<<<<<<< HEAD
 -- DELETE FROM available_interviewer;
-=======
 -- SELECT appointment.id, appointment.time, interview.student, interviewer.id, interviewer.name, interviewer.avatar  FROM appointment
 -- LEFT JOIN interview ON appointment.id = interview.appointment_id
 -- LEFT JOIN interviewer ON interviewer.id = interview.interviewer_id
@@ -36,7 +34,9 @@ SELECT * FROM available_interviewer;
 
 -- DELETE FROM available_interviewer;
 
--- INSERT INTO interview (id, student, interviewer_id, appointment_id) VALUES (8, 'Arthur', 2, 18);
+INSERT INTO interview (id, student, interviewer_id, appointment_id) VALUES (data.interview.student, data.interview.interviewer.id, data.id);
+
+-- INSERT INTO interview (data.interview.student, data.interview.interviewer.id, data.id) VALUES (8, 'Arthur', 2, 18);
+
 
 -- DELETE FROM interview where id = 7;
->>>>>>> 3dcc2119b1e3ba85cf6778f4381826c676ace44c

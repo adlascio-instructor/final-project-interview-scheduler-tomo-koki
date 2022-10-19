@@ -14,6 +14,7 @@ const Appointment = (props) => {
 
   function save(name, interviewer) {
     const interview = {
+      edit,
       student: name,
       interviewer,
     };
@@ -41,6 +42,7 @@ const Appointment = (props) => {
             interviewers={props.availableInterviewers}
             onSave={save}
             onCancel={() => setEdit(false)}
+            bookInterview={props.bookInterview}
           />
         ) : (
           <Show
@@ -56,6 +58,7 @@ const Appointment = (props) => {
           interviewers={props.availableInterviewers}
           onSave={save}
           onCancel={() => setAdd(false)}
+          bookInterview={props.bookInterview}
         />
       ) : (
         <Empty onAdd={() => setAdd(true)} />

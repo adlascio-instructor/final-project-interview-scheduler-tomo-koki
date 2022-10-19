@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import './App.scss';
-import DayList from './components/DayList';
-import Appointment from './components/Appointment';
-// import daysData from './components/__mocks__/days.json';
-// import appointmentsData from './components/__mocks__/appointments.json';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import "./App.scss";
+import DayList from "./components/DayList";
+import Appointment from "./components/Appointment";
+import axios from "axios";
+import io from "socket.io-client";
 
 export default function Application() {
-  const [day, setDay] = useState('Monday');
-  // const [days, setDays] = useState(daysData);
+  const [day, setDay] = useState("Monday");
   const [days, setDays] = useState({});
   const [appointments, setAppointments] = useState({});
-  // const [appointments, setAppointments] = useState(appointmentsData);
-  // const [appointments, setAppointments] = useState('');
   const [availableInterviewers, setAvailableInterviewers] = useState([]);
+  const socket = io.connect("http://localhost:8000");
 
   useEffect(() => {
     const getDays = async () => {
@@ -23,7 +20,7 @@ export default function Application() {
           setDays(res.data);
         })
         .catch((err) => {
-          console.error('ERROR', err);
+          console.error("ERROR", err);
         });
     };
 
@@ -34,7 +31,7 @@ export default function Application() {
           setAppointments(res.data);
         })
         .catch((err) => {
-          console.error('ERROR', err);
+          console.error("ERROR", err);
         });
     };
 
@@ -47,13 +44,11 @@ export default function Application() {
       setAppointments(response.data);
     });
     axios.get(`/available/interviewers/day/${day}`).then((response) => {
-      // console.log('check interviewer data', response.data);
       setAvailableInterviewers(response.data);
     });
   }, [day]);
 
   function bookInterview(id, interview) {
-    console.log(id, interview);
     const isEdit = appointments[id].interview;
     setAppointments((prev) => {
       const appointment = {
@@ -104,32 +99,51 @@ export default function Application() {
       return days;
     });
   }
+
+  useEffect(() => {
+    socket.on("received_message", (data) => {
+      bookInterview(data.id, data.interview);
+      return () => {
+        socket.off("received_message");
+      };
+    });
+    socket.on("received_delete", (data) => {
+      cancelInterview(data.id);
+      return () => {
+        socket.off("received_delete");
+      };
+    });
+  }, [appointments]);
+
   return (
-    <main className='layout'>
-      <section className='sidebar'>
+    <main className="layout">
+      <section className="sidebar">
         <img
-          className='sidebar--centered'
-          src='images/logo.png'
-          alt='Interview Scheduler'
+          className="sidebar--centered"
+          src="images/logo.png"
+          alt="Interview Scheduler"
         />
-        <hr className='sidebar__separator sidebar--centered' />
-        <nav className='sidebar__menu'>
+        <hr className="sidebar__separator sidebar--centered" />
+        <nav className="sidebar__menu">
           <DayList days={days} value={day} onChange={setDay} />
         </nav>
       </section>
-      <section className='schedule'>
+      <section className="schedule">
         {Object.values(appointments).map((appointment) => (
           <Appointment
             key={appointment.id}
             {...appointment}
-            bookInterview={(interview) =>
-              bookInterview(appointment.id, interview)
-            }
-            cancelInterview={cancelInterview}
+            bookInterview={(interview) => {
+              socket.emit("book", { id: appointment.id, interview });
+            }}
+            cancelInterview={(id) => {
+              cancelInterview(appointment.id);
+              socket.emit("delete", { id });
+            }}
             availableInterviewers={availableInterviewers}
           />
         ))}
-        <Appointment key='last' time='5pm' />
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
